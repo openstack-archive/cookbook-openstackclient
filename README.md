@@ -1,10 +1,11 @@
 # Description
 
-Installs the fog-openstack gem and offers Resources to use it.
+Installs the fog-openstack gem and offers LWRPs to use it.
 
 # Requirements
 
 - gem 'fog-openstack'
+- chef-client >= 12.8.1
 
 # Resources
 
