@@ -42,8 +42,8 @@ Installs the fog-openstack gem and offers Resources to use it.
 
 # License and Maintainer
 
-Maintainer:: cloudbau GmbH (<j.klare@cloudbau.de>)
-Source:: https://github.com/cloudbau/cookbook-openstackclient
+Maintainer:: cloudbau GmbH (<j.klare@cloudbau.de>)  
+Source:: https://github.com/cloudbau/cookbook-openstackclient  
 Issues:: https://github.com/cloudbau/cookbook-openstackclient/issues
 
 License:: Apache v2.0
