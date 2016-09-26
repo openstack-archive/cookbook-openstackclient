@@ -21,6 +21,6 @@ license 'Apache v2.0'
 description 'Installs the fog-openstack gem and offers LWRPs to use it'
 issues_url 'https://github.com/cloudbau/cookbook-openstackclient/issues'
 source_url 'https://github.com/cloudbau/cookbook-openstackclient'
-version '0.1.0'
+version '0.1.1'
 
 gem 'fog-openstack'
