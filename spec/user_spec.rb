@@ -55,8 +55,7 @@ describe 'openstackclient_test::user' do
 
   let(:found_domain) do
     double :find,
-           grant_domain_user_role: true,
-           revoke_domain_user_role: true
+           id: 5
   end
 
   let(:domains_populated) do
@@ -151,7 +150,9 @@ describe 'openstackclient_test::user' do
              users: users_populated,
              domains: domains_populated,
              roles: roles_populated,
-             projects: projects_populated
+             projects: projects_populated,
+             grant_domain_user_role: true,
+             revoke_domain_user_role: true
     end
 
     before do
@@ -238,14 +239,14 @@ describe 'openstackclient_test::user' do
     end
 
     it do
-      expect(found_domain).to receive(:grant_domain_user_role)
-        .with(4, 3)
+      expect(connection_dub).to receive(:grant_domain_user_role)
+        .with(5, 4, 3)
       chef_run
     end
 
     it do
-      expect(found_domain).to receive(:revoke_domain_user_role)
-        .with(4, 3)
+      expect(connection_dub).to receive(:revoke_domain_user_role)
+        .with(5, 4, 3)
       chef_run
     end
   end
