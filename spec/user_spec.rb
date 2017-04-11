@@ -65,6 +65,7 @@ describe 'openstackclient_test::user' do
 
   let(:found_project) do
     double :find,
+           id: 42,
            grant_role_to_user: true,
            revoke_role_from_user: true
   end
@@ -133,6 +134,7 @@ describe 'openstackclient_test::user' do
         .with(
           name: 'myuser',
           email: 'myemail',
+          default_project_id: 42,
           password: 'mypassword'
         )
       chef_run
