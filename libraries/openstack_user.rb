@@ -31,12 +31,14 @@ module OpenstackclientCookbook
 
     action :create do
       user = connection.users.find { |u| u.name == user_name }
+      project = connection.projects.find { |p| p.name == project_name }
       if user
         log "User with name: \"#{user_name}\" already exists"
       else
         connection.users.create(
           name: user_name,
           email: email,
+          default_project_id: project ? project.id : nil,
           password: password
         )
       end
