@@ -62,6 +62,7 @@ module OpenstackclientCookbook
       end
     end
 
+    # Grant a role in a project
     action :grant_role do
       user = connection.users.find { |u| u.name == user_name }
       project = connection.projects.find { |p| p.name == project_name }
@@ -76,6 +77,10 @@ module OpenstackclientCookbook
       project.revoke_role_from_user role.id, user.id if role && project && user
     end
 
+    # Grant a role in a domain
+    # Note: in spite of what the action name may suggest, the domain name is
+    # only used to identify a user who is in that domain. This action grants
+    # the user a role in the domain.
     action :grant_domain do
       user = connection.users.find { |u| u.name == user_name }
       domain = connection.domains.find { |p| p.name == domain_name }
