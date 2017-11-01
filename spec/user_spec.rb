@@ -133,6 +133,7 @@ describe 'openstackclient_test::user' do
       expect(users_empty).to receive(:create)
         .with(
           name: 'myuser',
+          domain_id: 5,
           email: 'myemail',
           default_project_id: 42,
           password: 'mypassword'
