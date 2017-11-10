@@ -23,4 +23,9 @@ RSpec.configure do |config|
   config.log_level = :error
 end
 
+UBUNTU_OPTS = {
+  platform: 'ubuntu',
+  version: '16.04'
+}.freeze
+
 at_exit { ChefSpec::Coverage.report! }

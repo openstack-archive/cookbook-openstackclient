@@ -19,7 +19,9 @@ require_relative '../libraries/openstack_domain'
 
 describe 'openstackclient_test::domain' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(step_into: ['openstack_domain'])
+    runner = ChefSpec::SoloRunner.new(
+      UBUNTU_OPTS.merge(step_into: ['openstack_domain'])
+    )
     runner.converge(described_recipe)
   end
 

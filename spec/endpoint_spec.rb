@@ -19,7 +19,9 @@ require_relative '../libraries/openstack_endpoint'
 
 describe 'openstackclient_test::endpoint' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(step_into: ['openstack_endpoint'])
+    runner = ChefSpec::SoloRunner.new(
+      UBUNTU_OPTS.merge(step_into: ['openstack_endpoint'])
+    )
     runner.converge(described_recipe)
   end
 

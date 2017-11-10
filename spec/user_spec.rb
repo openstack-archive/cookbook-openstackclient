@@ -19,7 +19,9 @@ require_relative '../libraries/openstack_user'
 
 describe 'openstackclient_test::user' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(step_into: ['openstack_user'])
+    runner = ChefSpec::SoloRunner.new(
+      UBUNTU_OPTS.merge(step_into: ['openstack_user'])
+    )
     runner.converge(described_recipe)
   end
 
