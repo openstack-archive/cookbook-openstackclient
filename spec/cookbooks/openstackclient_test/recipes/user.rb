@@ -49,7 +49,6 @@ end
 
 openstack_user 'myuser' do
   role_name 'myrole'
-  project_name 'myproject'
   domain_name 'mydomain'
   connection_params connection_params
   action :grant_domain
@@ -57,7 +56,6 @@ end
 
 openstack_user 'myuser' do
   role_name 'myrole'
-  project_name 'myproject'
   domain_name 'mydomain'
   connection_params connection_params
   action :revoke_domain

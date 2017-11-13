@@ -19,7 +19,9 @@ require_relative '../libraries/openstack_user'
 
 describe 'openstackclient_test::user' do
   let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(step_into: ['openstack_user'])
+    runner = ChefSpec::SoloRunner.new(
+      UBUNTU_OPTS.merge(step_into: ['openstack_user'])
+    )
     runner.converge(described_recipe)
   end
 
@@ -33,7 +35,9 @@ describe 'openstackclient_test::user' do
   let(:found_user) do
     double :find,
            id: 4,
-           destroy: true
+           destroy: true,
+           grant_role: true,
+           revoke_role: true
   end
 
   let(:users_populated) do
@@ -133,6 +137,7 @@ describe 'openstackclient_test::user' do
       expect(users_empty).to receive(:create)
         .with(
           name: 'myuser',
+          domain_id: 5,
           email: 'myemail',
           default_project_id: 42,
           password: 'mypassword'
@@ -152,9 +157,7 @@ describe 'openstackclient_test::user' do
              users: users_populated,
              domains: domains_populated,
              roles: roles_populated,
-             projects: projects_populated,
-             grant_domain_user_role: true,
-             revoke_domain_user_role: true
+             projects: projects_populated
     end
 
     before do
@@ -241,14 +244,14 @@ describe 'openstackclient_test::user' do
     end
 
     it do
-      expect(connection_dub).to receive(:grant_domain_user_role)
-        .with(5, 4, 3)
+      expect(found_user).to receive(:grant_role)
+        .with(3)
       chef_run
     end
 
     it do
-      expect(connection_dub).to receive(:revoke_domain_user_role)
-        .with(5, 4, 3)
+      expect(found_user).to receive(:revoke_role)
+        .with(3)
       chef_run
     end
   end
