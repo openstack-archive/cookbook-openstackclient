@@ -29,31 +29,31 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      service = connection.services.find { |s| s.name == service_name }
-      endpoint = connection.endpoints.find do |e|
-        e.service_id == service.id && e.interface == interface
+      service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
+      endpoint = new_resource.connection.endpoints.find do |e|
+        e.service_id == service.id && e.interface == new_resource.interface
       end
 
       if endpoint
-        log "#{interface}_endpoint for \"#{service_name}\" already exists"
+        log "#{new_resource.interface}_endpoint for \"#{new_resource.service_name}\" already exists"
       else
-        connection.endpoints.create(
-          interface: interface,
-          url: url,
+        new_resource.connection.endpoints.create(
+          interface: new_resource.interface,
+          url: new_resource.url,
           service_id: service.id,
-          name: endpoint_name,
-          region: region
+          name: new_resource.endpoint_name,
+          region: new_resource.region
         )
       end
     end
 
     action :delete do
-      service = connection.services.find { |s| s.name == service_name }
-      endpoint = connection.endpoints.find do |e|
+      service = new_resource.connection.services.find { |s| s.name == service_name }
+      endpoint = new_resource.connection.endpoints.find do |e|
         e.service_id == service.id && e.interface == interface
       end
       if endpoint
-        connection.endpoints.destroy(endpoint.id)
+        new_resource.connection.endpoints.destroy(endpoint.id)
       else
         log "#{interface}_endpoint for \"#{service_name}\" doesn't exist"
       end

@@ -26,23 +26,23 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      service = connection.services.find { |s| s.name == service_name }
+      service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
       if service
-        log "Service with name: \"#{service_name}\" already exists"
+        log "Service with name: \"#{new_resource.service_name}\" already exists"
       else
-        connection.services.create(
-          name: service_name,
-          type: type
+        new_resource.connection.services.create(
+          name: new_resource.service_name,
+          type: new_resource.type
         )
       end
     end
 
     action :delete do
-      service = connection.services.find { |s| s.name == service_name }
+      service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
       if service
         service.destroy
       else
-        log "Service with name: \"#{service_name}\" doesn't exist"
+        log "Service with name: \"#{new_resource.service_name}\" doesn't exist"
       end
     end
   end

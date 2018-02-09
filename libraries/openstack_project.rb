@@ -25,20 +25,20 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      project = connection.projects.find { |p| p.name == project_name }
+      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
       if project
-        log "Project with name: \"#{project_name}\" already exists"
+        log "Project with name: \"#{new_resource.project_name}\" already exists"
       else
-        connection.projects.create name: project_name
+        new_resource.connection.projects.create name: new_resource.project_name
       end
     end
 
     action :delete do
-      project = connection.projects.find { |p| p.name == project_name }
+      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
       if project
-        project.destroy
+        new_resource.project.destroy
       else
-        log "Project with name: \"#{project_name}\" doesn't exist"
+        log "Project with name: \"#{new_resource.project_name}\" doesn't exist"
       end
     end
   end

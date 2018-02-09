@@ -25,20 +25,20 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      role = connection.roles.find { |r| r.name == role_name }
+      role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       if role
-        log "Role with name: \"#{role_name}\" already exists"
+        log "Role with name: \"#{new_resource.role_name}\" already exists"
       else
-        connection.roles.create name: role_name
+        new_resource.connection.roles.create name: new_resource.role_name
       end
     end
 
     action :delete do
-      role = connection.roles.find { |r| r.name == role_name }
+      role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       if role
         role.destroy
       else
-        log "Role with name: \"#{role_name}\" doesn't exist"
+        log "Role with name: \"#{new_resource.role_name}\" doesn't exist"
       end
     end
   end
