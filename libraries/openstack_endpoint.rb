@@ -31,14 +31,14 @@ module OpenstackclientCookbook
     action :create do
       service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
       endpoint = new_resource.connection.endpoints.find do |e|
-        e.service_id == service.id && e.interface == new_resource.interface
+        e.service_id == service.id && e.interface == interface
       end
 
       if endpoint
         log "#{new_resource.interface}_endpoint for \"#{new_resource.service_name}\" already exists"
       else
         new_resource.connection.endpoints.create(
-          interface: new_resource.interface,
+          interface: interface,
           url: new_resource.url,
           service_id: service.id,
           name: new_resource.endpoint_name,
