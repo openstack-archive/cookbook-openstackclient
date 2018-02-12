@@ -36,9 +36,9 @@ module OpenstackclientCookbook
     action :delete do
       project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
       if project
-        new_resource.project.destroy
+        project.destroy
       else
-        log "Project with name: \"#{new_resource.project_name}\" doesn't exist"
+        log "Project with name: \"#{project_name}\" doesn't exist"
       end
     end
   end
