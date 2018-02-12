@@ -17,10 +17,15 @@
 name 'openstackclient'
 maintainer 'cloudbau GmbH'
 maintainer_email 'j.klare@cloudbau.de'
-license 'Apache v2.0'
+license 'Apache-2.0'
 description 'Installs the fog-openstack gem and offers LWRPs to use it'
 issues_url 'https://github.com/cloudbau/cookbook-openstackclient/issues'
 source_url 'https://github.com/cloudbau/cookbook-openstackclient'
+chef_version '>= 12.5' if respond_to?(:chef_version)
 version '16.0.0'
+
+%w(ubuntu redhat centos).each do |os|
+  supports os
+end
 
 gem 'fog-openstack'

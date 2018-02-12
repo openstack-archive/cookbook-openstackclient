@@ -19,7 +19,7 @@ connection_params = {
   openstack_username:     'admin',
   openstack_api_key:      'password',
   openstack_project_name: 'admin',
-  openstack_domain_id:    'default'
+  openstack_domain_id:    'default',
 }
 
 openstack_service 'myservice' do

@@ -23,9 +23,9 @@ task :lint do
   sh %(chef exec foodcritic --epic-fail any .)
 end
 
-desc 'Run RuboCop (style) tests'
+desc 'Run cookstyle tests'
 task :style do
-  sh %(chef exec rubocop)
+  sh %(chef exec cookstyle)
 end
 
 desc 'Run RSpec (unit) tests'

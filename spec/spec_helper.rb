@@ -25,7 +25,7 @@ end
 
 UBUNTU_OPTS = {
   platform: 'ubuntu',
-  version: '16.04'
+  version: '16.04',
 }.freeze
 
 at_exit { ChefSpec::Coverage.report! }
