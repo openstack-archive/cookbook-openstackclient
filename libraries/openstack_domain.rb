@@ -25,23 +25,23 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      domain = connection.domains.find { |u| u.id == domain_name } ||
-               connection.domains.find { |u| u.name == domain_name }
+      domain = new_resource.connection.domains.find { |u| u.id == new_resource.domain_name } ||
+               new_resource.connection.domains.find { |u| u.name == new_resource.domain_name }
       if domain
-        log "Domain with name: \"#{domain_name}\" already exists"
+        log "Domain with name: \"#{new_resource.domain_name}\" already exists"
       else
-        connection.domains.create(
-          name: domain_name
+        new_resource.connection.domains.create(
+          name: new_resource.domain_name
         )
       end
     end
 
     action :delete do
-      domain = connection.domains.find { |u| u.name == domain_name }
+      domain = new_resource.connection.domains.find { |u| u.name == new_resource.domain_name }
       if domain
         domain.destroy
       else
-        log "Domain with name: \"#{domain_name}\" doesn't exist"
+        log "Domain with name: \"#{new_resource.domain_name}\" doesn't exist"
       end
     end
   end

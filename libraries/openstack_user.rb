@@ -30,50 +30,50 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      user = connection.users.find { |u| u.name == user_name }
-      project = connection.projects.find { |p| p.name == project_name }
-      domain = connection.domains.find { |u| u.name == domain_name }
+      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
+      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
+      domain = new_resource.connection.domains.find { |u| u.name == new_resource.domain_name }
       if user
-        log "User with name: \"#{user_name}\" already exists"
+        log "User with name: \"#{new_resource.user_name}\" already exists"
       elsif domain
-        connection.users.create(
-          name: user_name,
+        new_resource.connection.users.create(
+          name: new_resource.user_name,
           domain_id: domain.id,
-          email: email,
+          email: new_resource.email,
           default_project_id: project ? project.id : nil,
-          password: password
+          password: new_resource.password
         )
       else
-        connection.users.create(
-          name: user_name,
-          email: email,
+        new_resource.connection.users.create(
+          name: new_resource.user_name,
+          email: new_resource.email,
           default_project_id: project ? project.id : nil,
-          password: password
+          password: new_resource.password
         )
       end
     end
 
     action :delete do
-      user = connection.users.find { |u| u.name == user_name }
+      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
       if user
         user.destroy
       else
-        log "User with name: \"#{user_name}\" doesn't exist"
+        log "User with name: \"#{new_resource.user_name}\" doesn't exist"
       end
     end
 
     # Grant a role in a project
     action :grant_role do
-      user = connection.users.find { |u| u.name == user_name }
-      project = connection.projects.find { |p| p.name == project_name }
-      role = connection.roles.find { |r| r.name == role_name }
+      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
+      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
+      role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       project.grant_role_to_user role.id, user.id if role && project && user
     end
 
     action :revoke_role do
-      user = connection.users.find { |u| u.name == user_name }
-      project = connection.projects.find { |p| p.name == project_name }
-      role = connection.roles.find { |r| r.name == role_name }
+      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
+      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
+      role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       project.revoke_role_from_user role.id, user.id if role && project && user
     end
 
@@ -82,17 +82,17 @@ module OpenstackclientCookbook
     # only used to identify a user who is in that domain. This action grants
     # the user a role in the domain.
     action :grant_domain do
-      user = connection.users.find { |u| u.name == user_name }
-      domain = connection.domains.find { |p| p.name == domain_name }
-      role = connection.roles.find { |r| r.name == role_name }
+      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
+      domain = new_resource.connection.domains.find { |p| p.name == new_resource.domain_name }
+      role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       user.grant_role role.id if role && domain && user
     end
 
     action :revoke_domain do
-      user = connection.users.find { |u| u.name == user_name }
-      domain = connection.domains.find { |p| p.name == domain_name }
-      role = connection.roles.find { |r| r.name == role_name }
-      user.revoke_role  role.id if role && domain && user
+      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
+      domain = new_resource.connection.domains.find { |p| p.name == new_resource.domain_name }
+      role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
+      user.revoke_role role.id if role && domain && user
     end
   end
 end
