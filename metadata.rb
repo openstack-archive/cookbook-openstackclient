@@ -22,7 +22,7 @@ description 'Installs the fog-openstack gem and offers LWRPs to use it'
 issues_url 'https://github.com/cloudbau/cookbook-openstackclient/issues'
 source_url 'https://github.com/cloudbau/cookbook-openstackclient'
 chef_version '>= 12.5' if respond_to?(:chef_version)
-version '16.0.0'
+version '17.0.0'
 
 %w(ubuntu redhat centos).each do |os|
   supports os
