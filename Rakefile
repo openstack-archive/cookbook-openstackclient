@@ -1,4 +1,4 @@
-#  encoding: UTF-8
+
 #
 #  Copyright 2016 cloudbau GmbH
 #
@@ -16,7 +16,7 @@
 
 task default: ['test']
 
-task test: [:lint, :style, :unit]
+task test: %i(lint style unit)
 
 desc 'Run FoodCritic (lint) tests'
 task :lint do

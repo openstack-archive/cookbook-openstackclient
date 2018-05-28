@@ -1,4 +1,4 @@
-#  encoding: UTF-8
+
 #
 #  Copyright 2016 cloudbau GmbH
 #

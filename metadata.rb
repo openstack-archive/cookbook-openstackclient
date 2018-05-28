@@ -1,5 +1,5 @@
-name 'openstack-client'
-maintainer 'openstack-chef'
+name 'openstackclient'
+maintainer 'OpenStack'
 maintainer_email 'openstack-dev@lists.openstack.org'
 license 'Apache-2.0'
 description 'Installs the fog-openstack gem and offers LWRPs to use it'
