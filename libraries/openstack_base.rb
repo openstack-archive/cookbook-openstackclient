@@ -15,7 +15,7 @@
 #  limitations under the License.
 
 module OpenstackclientCookbook
-  class OpenstackBase < Chef::Resource
+  class OpenstackBase < Chef::Resource::LWRPBase
     require 'fog/openstack'
     def connection
       @connection_cache ||= Fog::Identity::OpenStack.new(connection_params)

@@ -55,7 +55,7 @@ module OpenstackclientCookbook
       if endpoint
         new_resource.connection.endpoints.destroy(endpoint.id)
       else
-        log "#{interface}_endpoint for \"#{service_name}\" doesn't exist"
+        log "#{new_resource.interface}_endpoint for \"#{new_resource.service_name}\" doesn't exist"
       end
     end
   end

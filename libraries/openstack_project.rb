@@ -38,7 +38,7 @@ module OpenstackclientCookbook
       if project
         project.destroy
       else
-        log "Project with name: \"#{project_name}\" doesn't exist"
+        log "Project with name: \"#{new_resource.project_name}\" doesn't exist"
       end
     end
   end
