@@ -12,4 +12,4 @@ version '18.0.0'
   supports os
 end
 
-gem 'fog-openstack'
+gem 'fog-openstack', '<0.2.0'
