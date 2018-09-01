@@ -80,16 +80,22 @@ module OpenstackclientCookbook
       user = connection.users.find { |u| u.name == user_name }
       domain = connection.domains.find { |p| p.name == domain_name }
       role = connection.roles.find { |r| r.name == role_name }
-      connection.grant_domain_user_role(
-        domain.id, user.id, role.id) if role && domain && user
+      if role && domain && user
+        connection.grant_domain_user_role(
+          domain.id, user.id, role.id
+        )
+      end
     end
 
     action :revoke_domain do
       user = connection.users.find { |u| u.name == user_name }
       domain = connection.domains.find { |p| p.name == domain_name }
       role = connection.roles.find { |r| r.name == role_name }
-      connection.revoke_domain_user_role(
-        domain.id, user.id, role.id) if role && domain && user
+      if role && domain && user
+        connection.revoke_domain_user_role(
+          domain.id, user.id, role.id
+        )
+      end
     end
   end
 end

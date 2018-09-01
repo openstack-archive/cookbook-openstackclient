@@ -23,4 +23,13 @@ RSpec.configure do |config|
   config.log_level = :error
 end
 
+REDHAT_OPTS = {
+  platform: 'redhat',
+  version: '7.3'
+}.freeze
+UBUNTU_OPTS = {
+  platform: 'ubuntu',
+  version: '16.04'
+}.freeze
+
 at_exit { ChefSpec::Coverage.report! }
