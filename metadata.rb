@@ -12,4 +12,4 @@ version '17.0.1'
   supports os
 end
 
-gem 'fog-openstack', '<0.2.0'
+gem 'fog-openstack', '>=0.2.1'
