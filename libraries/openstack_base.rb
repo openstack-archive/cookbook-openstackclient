@@ -18,7 +18,7 @@ module OpenstackclientCookbook
   class OpenstackBase < Chef::Resource::LWRPBase
     require 'fog/openstack'
     def connection
-      @connection_cache ||= Fog::Identity::OpenStack.new(connection_params)
+      @connection_cache ||= Fog::OpenStack::Identity.new(connection_params)
     end
   end
 end
