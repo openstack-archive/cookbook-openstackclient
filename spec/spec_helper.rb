@@ -1,6 +1,6 @@
 
 #
-#  Copyright 2016 cloudbau GmbH
+# Copyright:: 2016 cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -25,7 +25,5 @@ end
 
 UBUNTU_OPTS = {
   platform: 'ubuntu',
-  version: '16.04',
+  version: '18.04',
 }.freeze
-
-at_exit { ChefSpec::Coverage.report! }

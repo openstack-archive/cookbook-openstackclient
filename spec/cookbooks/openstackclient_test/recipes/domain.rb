@@ -1,6 +1,6 @@
 
 #
-#  Copyright 2016 cloudbau GmbH
+# Copyright:: 2016 cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 #  limitations under the License.
 
 connection_params = {
-  openstack_auth_url:     'http://devstack.test:5000/v3/auth/tokens',
-  openstack_username:     'admin',
-  openstack_api_key:      'password',
+  openstack_auth_url: 'http://devstack.test:5000/v3/auth/tokens',
+  openstack_username: 'admin',
+  openstack_api_key: 'password',
   openstack_project_name: 'admin',
-  openstack_domain_id:    'default',
+  openstack_domain_id: 'default',
 }
 
 openstack_domain 'mydomain' do

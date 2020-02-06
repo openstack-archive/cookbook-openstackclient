@@ -13,9 +13,9 @@ it.
 Requirements
 ============
 
-- Chef 14 or higher
-- ChefDK 3.2.30 for testing (also includes Berkshelf for cookbook
-  dependency resolution)
+- Chef 15 or higher
+- Chef Workstation 0.15.6 for testing (also includes Berkshelf for
+  cookbook dependency resolution)
 - gem 'fog-openstack'
 
 Resources
@@ -79,7 +79,7 @@ License and Author
 +-----------------+---------------------------------------------------+
 | **Copyright**   | Copyright (c) 2016-2019, x-ion GmbH               |
 +-----------------+---------------------------------------------------+
-| **Copyright**   | Copyright (c) 2019, Oregon State University       |
+| **Copyright**   | Copyright (c) 2019-2020, Oregon State University  |
 +-----------------+---------------------------------------------------+
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may

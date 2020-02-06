@@ -29,9 +29,11 @@ solver :ruby, :required
   -ops-messaging
 ).each do |cookbook|
   if Dir.exist?("../cookbook-openstack#{cookbook}")
-    cookbook "openstack#{cookbook}", path: "../cookbook-openstack#{cookbook}"
+    cookbook "openstack#{cookbook}", path: "../cookbook-openstack#{cookbook}", group: 'integration'
   else
-    cookbook "openstack#{cookbook}", git: "https://opendev.org/openstack/cookbook-openstack#{cookbook}"
+    cookbook "openstack#{cookbook}",
+      git: "https://opendev.org/openstack/cookbook-openstack#{cookbook}",
+      group: 'integration'
   end
 end
 
