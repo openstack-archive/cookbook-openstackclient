@@ -29,7 +29,7 @@ describe 'openstackclient_test::user' do
     double :user,
            create: true,
            destroy: true,
-           find: nil
+           find_by_name: []
   end
 
   let(:found_user) do
@@ -44,7 +44,7 @@ describe 'openstackclient_test::user' do
     double :user,
            create: true,
            destroy: true,
-           find: found_user
+           find_by_name: [found_user]
   end
 
   let(:found_role) do

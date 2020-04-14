@@ -1,4 +1,3 @@
-
 #
 #  Copyright 2016 cloudbau GmbH
 #
@@ -30,9 +29,14 @@ module OpenstackclientCookbook
     default_action :create
 
     action :create do
-      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
-      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
-      domain = new_resource.connection.domains.find { |u| u.name == new_resource.domain_name }
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      project = new_resource.connection.projects.find do |p|
+        (p.name == new_resource.project_name) && (domain ? p.domain_id == domain.id : {})
+      end
+      user = new_resource.connection.users.find_by_name(
+        new_resource.user_name,
+        domain ? { domain_id: domain.id } : {}
+      ).first
       if user
         log "User with name: \"#{new_resource.user_name}\" already exists"
       elsif domain
@@ -54,7 +58,11 @@ module OpenstackclientCookbook
     end
 
     action :delete do
-      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      user = new_resource.connection.users.find_by_name(
+        new_resource.user_name,
+        domain ? { domain_id: domain.id } : {}
+      ).first
       if user
         user.destroy
       else
@@ -64,15 +72,27 @@ module OpenstackclientCookbook
 
     # Grant a role in a project
     action :grant_role do
-      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
-      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      project = new_resource.connection.projects.find do |p|
+        (p.name == new_resource.project_name) && (domain ? p.domain_id == domain.id : {})
+      end
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
+      user = new_resource.connection.users.find_by_name(
+        new_resource.user_name,
+        domain ? { domain_id: domain.id } : {}
+      ).first
       project.grant_role_to_user role.id, user.id if role && project && user
     end
 
     action :revoke_role do
-      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
-      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      user = new_resource.connection.users.find_by_name(
+        new_resource.user_name,
+        domain ? { domain_id: domain.id } : {}
+      ).first
+      project = new_resource.connection.projects.find do |p|
+        (p.name == new_resource.project_name) && (domain ? p.domain_id == domain.id : {})
+      end
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       project.revoke_role_from_user role.id, user.id if role && project && user
     end
@@ -82,15 +102,21 @@ module OpenstackclientCookbook
     # only used to identify a user who is in that domain. This action grants
     # the user a role in the domain.
     action :grant_domain do
-      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
-      domain = new_resource.connection.domains.find { |p| p.name == new_resource.domain_name }
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      user = new_resource.connection.users.find_by_name(
+        new_resource.user_name,
+        domain ? { domain_id: domain.id } : {}
+      ).first
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       user.grant_role role.id if role && domain && user
     end
 
     action :revoke_domain do
-      user = new_resource.connection.users.find { |u| u.name == new_resource.user_name }
-      domain = new_resource.connection.domains.find { |p| p.name == new_resource.domain_name }
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      user = new_resource.connection.users.find_by_name(
+        new_resource.user_name,
+        domain ? { domain_id: domain.id } : {}
+      ).first
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       user.revoke_role role.id if role && domain && user
     end
