@@ -18,6 +18,7 @@ require_relative 'openstack_base'
 module OpenstackclientCookbook
   class OpenstackService < OpenstackBase
     resource_name :openstack_service
+    provides :openstack_service
 
     property :service_name, String, name_property: true
     property :type, String, required: true

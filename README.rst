@@ -14,7 +14,7 @@ Requirements
 ============
 
 - Chef 15 or higher
-- Chef Workstation 0.15.6 for testing (also includes Berkshelf for
+- Chef Workstation 20.8.111 for testing (also includes Berkshelf for
   cookbook dependency resolution)
 - gem 'fog-openstack'
 

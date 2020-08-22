@@ -18,6 +18,7 @@ require_relative 'openstack_base'
 module OpenstackclientCookbook
   class OpenstackDomain < OpenstackBase
     resource_name :openstack_domain
+    provides :openstack_domain
 
     property :domain_name, String, name_property: true
     property :connection_params, Hash, required: true

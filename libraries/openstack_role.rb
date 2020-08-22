@@ -18,6 +18,7 @@ require_relative 'openstack_base'
 module OpenstackclientCookbook
   class OpenstackRole < OpenstackBase
     resource_name :openstack_role
+    provides :openstack_role
 
     property :role_name, String, name_property: true
     property :connection_params, Hash, required: true
