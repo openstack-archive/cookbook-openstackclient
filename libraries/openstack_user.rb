@@ -17,6 +17,7 @@ require_relative 'openstack_base'
 module OpenstackclientCookbook
   class OpenstackUser < OpenstackBase
     resource_name :openstack_user
+    provides :openstack_user
 
     property :user_name, String, name_property: true
     property :email, String, default: 'defaultmail'

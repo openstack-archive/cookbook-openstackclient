@@ -12,4 +12,4 @@ version           '20.0.0'
   supports os
 end
 
-gem 'fog-openstack', '= 1.0.10'
+gem 'fog-openstack', '~> 1.0.11'

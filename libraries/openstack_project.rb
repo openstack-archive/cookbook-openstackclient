@@ -18,6 +18,7 @@ require_relative 'openstack_base'
 module OpenstackclientCookbook
   class OpenstackProject < OpenstackBase
     resource_name :openstack_project
+    provides :openstack_project
 
     property :project_name, String, name_property: true
     property :connection_params, Hash, required: true

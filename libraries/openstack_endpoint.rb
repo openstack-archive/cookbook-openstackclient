@@ -18,6 +18,7 @@ require_relative 'openstack_base'
 module OpenstackclientCookbook
   class OpenstackEndpoint < OpenstackBase
     resource_name :openstack_endpoint
+    provides :openstack_endpoint
 
     property :endpoint_name, String, name_property: true
     property :service_name, String, required: true
