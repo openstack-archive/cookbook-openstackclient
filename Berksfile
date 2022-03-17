@@ -33,6 +33,7 @@ solver :ruby, :required
   else
     cookbook "openstack#{cookbook}",
       git: "https://opendev.org/openstack/cookbook-openstack#{cookbook}",
+      branch: 'stable/train',
       group: 'integration'
   end
 end
