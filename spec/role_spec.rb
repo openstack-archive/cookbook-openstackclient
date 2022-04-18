@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -69,18 +69,6 @@ describe 'openstackclient_test::role' do
     end
 
     it do
-      expect(chef_run).to write_log(
-        'Role with name: "myrole" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Role with name: "myrole" already exists'
-      )
-    end
-
-    it do
       expect(roles_empty).to receive(:create)
         .with(
           name: 'myrole'
@@ -116,18 +104,6 @@ describe 'openstackclient_test::role' do
 
     it do
       expect(chef_run).to delete_openstack_role('myrole')
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Role with name: "myrole" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'Role with name: "myrole" already exists'
-      )
     end
 
     it do

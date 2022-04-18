@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -69,18 +69,6 @@ describe 'openstackclient_test::service' do
     end
 
     it do
-      expect(chef_run).to write_log(
-        'Service with name: "myservice" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Service with name: "myservice" already exists'
-      )
-    end
-
-    it do
       expect(services_empty).to receive(:create)
         .with(
           name: 'myservice',
@@ -117,18 +105,6 @@ describe 'openstackclient_test::service' do
 
     it do
       expect(chef_run).to delete_openstack_service('myservice')
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Service with name: "myservice" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'Service with name: "myservice" already exists'
-      )
     end
 
     it do

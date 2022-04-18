@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -28,21 +28,20 @@ module OpenstackclientCookbook
     action :create do
       domain = new_resource.connection.domains.find { |u| u.id == new_resource.domain_name } ||
                new_resource.connection.domains.find { |u| u.name == new_resource.domain_name }
-      if domain
-        log "Domain with name: \"#{new_resource.domain_name}\" already exists"
-      else
-        new_resource.connection.domains.create(
-          name: new_resource.domain_name
-        )
+      unless domain
+        converge_by "creating domain #{new_resource.domain_name}" do
+          new_resource.connection.domains.create(name: new_resource.domain_name)
+        end
       end
     end
 
     action :delete do
       domain = new_resource.connection.domains.find { |u| u.name == new_resource.domain_name }
       if domain
-        domain.destroy
-      else
-        log "Domain with name: \"#{new_resource.domain_name}\" doesn't exist"
+        converge_by "deleting domain #{new_resource.domain_name}" do
+          domain.update(enabled: false)
+          domain.destroy
+        end
       end
     end
   end

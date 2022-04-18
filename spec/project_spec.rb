@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -25,6 +25,26 @@ describe 'openstackclient_test::project' do
     runner.converge(described_recipe)
   end
 
+  let(:domains_empty) do
+    double :domains,
+           create: true,
+           destroy: true,
+           find: nil
+  end
+
+  let(:found_domain) do
+    double :find,
+           update: { enabled: false },
+           destroy: true
+  end
+
+  let(:domains_populated) do
+    double :domains,
+           create: true,
+           destroy: true,
+           find: found_domain
+  end
+
   let(:projects_empty) do
     double :projects,
            create: true,
@@ -47,7 +67,8 @@ describe 'openstackclient_test::project' do
   context 'no projects defined' do
     let(:connection_dub) do
       double :fog_connection,
-             projects: projects_empty
+             projects: projects_empty,
+             domains: domains_empty
     end
 
     before do
@@ -66,18 +87,6 @@ describe 'openstackclient_test::project' do
 
     it do
       expect(chef_run).to delete_openstack_project('myproject')
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'Project with name: "myproject" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Project with name: "myproject" already exists'
-      )
     end
 
     it do
@@ -97,7 +106,8 @@ describe 'openstackclient_test::project' do
   context 'projects defined' do
     let(:connection_dub) do
       double :fog_connection,
-             projects: projects_populated
+             projects: projects_populated,
+             domains: domains_populated
     end
 
     before do
@@ -116,18 +126,6 @@ describe 'openstackclient_test::project' do
 
     it do
       expect(chef_run).to delete_openstack_project('myproject')
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Project with name: "myproject" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'Project with name: "myproject" already exists'
-      )
     end
 
     it do

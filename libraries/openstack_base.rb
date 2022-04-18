@@ -1,7 +1,7 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
-# Copyright:: 2019-2021, Oregon State University
+# Copyright:: 2016-2022, cloudbau GmbH
+# Copyright:: 2019-2022, Oregon State University
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.

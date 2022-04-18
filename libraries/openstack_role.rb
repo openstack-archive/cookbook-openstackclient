@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -27,19 +27,19 @@ module OpenstackclientCookbook
 
     action :create do
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
-      if role
-        log "Role with name: \"#{new_resource.role_name}\" already exists"
-      else
-        new_resource.connection.roles.create name: new_resource.role_name
+      unless role
+        converge_by "creating role #{new_resource.role_name}" do
+          new_resource.connection.roles.create name: new_resource.role_name
+        end
       end
     end
 
     action :delete do
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
       if role
-        role.destroy
-      else
-        log "Role with name: \"#{new_resource.role_name}\" doesn't exist"
+        converge_by "deleting role #{new_resource.role_name}" do
+          role.destroy
+        end
       end
     end
   end

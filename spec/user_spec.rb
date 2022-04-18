@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -37,6 +37,16 @@ describe 'openstackclient_test::user' do
            id: 4,
            destroy: true,
            grant_role: true,
+           check_role: false,
+           revoke_role: true
+  end
+
+  let(:found_user_revoke) do
+    double :find,
+           id: 4,
+           destroy: true,
+           grant_role: true,
+           check_role: true,
            revoke_role: true
   end
 
@@ -45,6 +55,13 @@ describe 'openstackclient_test::user' do
            create: true,
            destroy: true,
            find_by_name: [ found_user ]
+  end
+
+  let(:users_populated_revoke) do
+    double :user,
+           create: true,
+           destroy: true,
+           find_by_name: [ found_user_revoke ]
   end
 
   let(:found_role) do
@@ -122,18 +139,6 @@ describe 'openstackclient_test::user' do
     end
 
     it do
-      expect(chef_run).to write_log(
-        'User with name: "myuser" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'User with name: "myuser" already exists'
-      )
-    end
-
-    it do
       expect(users_empty).to receive(:create)
         .with(
           name: 'myuser',
@@ -194,18 +199,6 @@ describe 'openstackclient_test::user' do
     end
 
     it do
-      expect(chef_run).not_to write_log(
-        'User with name: "myuser" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'User with name: "myuser" already exists'
-      )
-    end
-
-    it do
       expect(chef_run).to grant_role_openstack_user('myuser')
     end
 
@@ -238,21 +231,36 @@ describe 'openstackclient_test::user' do
     end
 
     it do
-      expect(found_project).to receive(:revoke_role_from_user)
-        .with(3, 4)
-      chef_run
-    end
-
-    it do
       expect(found_user).to receive(:grant_role)
         .with(3)
       chef_run
     end
 
-    it do
-      expect(found_user).to receive(:revoke_role)
-        .with(3)
-      chef_run
+    context 'revoked' do
+      let(:connection_dub) do
+        double :fog_connection,
+               users: users_populated_revoke,
+               domains: domains_populated,
+               roles: roles_populated,
+               projects: projects_populated
+      end
+
+      before do
+        allow_any_instance_of(OpenstackclientCookbook::OpenstackUser)
+          .to receive(:connection).and_return(connection_dub)
+      end
+
+      it do
+        expect(found_user_revoke).to receive(:revoke_role)
+          .with(3)
+        chef_run
+      end
+
+      it do
+        expect(found_project).to receive(:revoke_role_from_user)
+          .with(3, 4)
+        chef_run
+      end
     end
   end
 end

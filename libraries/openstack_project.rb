@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,25 +21,45 @@ module OpenstackclientCookbook
     provides :openstack_project
 
     property :project_name, String, name_property: true
+    property :domain_name, String, default: 'Default'
     property :connection_params, Hash, required: true
 
     default_action :create
 
     action :create do
-      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
-      if project
-        log "Project with name: \"#{new_resource.project_name}\" already exists"
-      else
-        new_resource.connection.projects.create name: new_resource.project_name
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      project = new_resource.connection.projects.find do |p|
+        (p.name == new_resource.project_name) && (domain ? p.domain_id == domain.id : {})
+      end
+      if !project && domain
+        converge_by "creating project #{new_resource.project_name} in domain #{new_resource.domain_name}" do
+          new_resource.connection.projects.create(
+            name: new_resource.project_name,
+            domain_id: domain.id
+          )
+        end
+      elsif !project
+        converge_by "creating project #{new_resource.project_name}" do
+          new_resource.connection.projects.create(
+            name: new_resource.project_name
+          )
+        end
       end
     end
 
     action :delete do
-      project = new_resource.connection.projects.find { |p| p.name == new_resource.project_name }
-      if project
-        project.destroy
-      else
-        log "Project with name: \"#{new_resource.project_name}\" doesn't exist"
+      domain = new_resource.connection.domains.find { |d| d.name == new_resource.domain_name }
+      project = new_resource.connection.projects.find do |p|
+        (p.name == new_resource.project_name) && (domain ? p.domain_id == domain.id : {})
+      end
+      if project && domain
+        converge_by "deleting project #{new_resource.project_name} in domain #{new_resource.domain_name}" do
+          project.destroy
+        end
+      elsif project
+        converge_by "deleting project #{new_resource.project_name}" do
+          project.destroy
+        end
       end
     end
   end

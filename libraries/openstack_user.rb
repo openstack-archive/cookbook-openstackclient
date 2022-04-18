@@ -1,5 +1,5 @@
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -38,23 +38,25 @@ module OpenstackclientCookbook
           new_resource.user_name,
           domain ? { domain_id: domain.id } : {}
         ).first
-      if user
-        log "User with name: \"#{new_resource.user_name}\" already exists"
-      elsif domain
-        new_resource.connection.users.create(
-          name: new_resource.user_name,
-          domain_id: domain.id,
-          email: new_resource.email,
-          default_project_id: project ? project.id : nil,
-          password: new_resource.password
-        )
-      else
-        new_resource.connection.users.create(
-          name: new_resource.user_name,
-          email: new_resource.email,
-          default_project_id: project ? project.id : nil,
-          password: new_resource.password
-        )
+      if !user && domain
+        converge_by "creating user #{new_resource.user_name} in domain #{new_resource.domain_name}" do
+          new_resource.connection.users.create(
+            name: new_resource.user_name,
+            domain_id: domain.id,
+            email: new_resource.email,
+            default_project_id: project ? project.id : nil,
+            password: new_resource.password
+          )
+        end
+      elsif !user
+        converge_by "creating user #{new_resource.user_name}" do
+          new_resource.connection.users.create(
+            name: new_resource.user_name,
+            email: new_resource.email,
+            default_project_id: project ? project.id : nil,
+            password: new_resource.password
+          )
+        end
       end
     end
 
@@ -65,9 +67,9 @@ module OpenstackclientCookbook
           domain ? { domain_id: domain.id } : {}
         ).first
       if user
-        user.destroy
-      else
-        log "User with name: \"#{new_resource.user_name}\" doesn't exist"
+        converge_by "deleting user #{new_resource.user_name}" do
+          user.destroy
+        end
       end
     end
 
@@ -82,7 +84,11 @@ module OpenstackclientCookbook
           new_resource.user_name,
           domain ? { domain_id: domain.id } : {}
         ).first
-      project.grant_role_to_user role.id, user.id if role && project && user
+      if user && role && domain && project && !user.check_role(role.id)
+        converge_by "granting role #{new_resource.role_name} to user #{new_resource.user_name}" do
+          project.grant_role_to_user role.id, user.id
+        end
+      end
     end
 
     action :revoke_role do
@@ -95,7 +101,12 @@ module OpenstackclientCookbook
         (p.name == new_resource.project_name) && (domain ? p.domain_id == domain.id : {})
       end
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
-      project.revoke_role_from_user role.id, user.id if role && project && user
+
+      if user && role && project && user.check_role(role.id)
+        converge_by "revoking role #{new_resource.role_name} to user #{new_resource.user_name}" do
+          project.revoke_role_from_user role.id, user.id
+        end
+      end
     end
 
     # Grant a role in a domain
@@ -109,7 +120,11 @@ module OpenstackclientCookbook
           domain ? { domain_id: domain.id } : {}
         ).first
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
-      user.grant_role role.id if role && domain && user
+      if user && role && domain && !user.check_role(role.id)
+        converge_by "granting role #{new_resource.role_name} to user #{new_resource.user_name} in domain #{new_resource.domain_name}" do
+          user.grant_role role.id
+        end
+      end
     end
 
     action :revoke_domain do
@@ -119,7 +134,11 @@ module OpenstackclientCookbook
           domain ? { domain_id: domain.id } : {}
         ).first
       role = new_resource.connection.roles.find { |r| r.name == new_resource.role_name }
-      user.revoke_role role.id if role && domain && user
+      if user && role && domain && user.check_role(role.id)
+        converge_by "revoking role #{new_resource.role_name} to user #{new_resource.user_name} in domain #{new_resource.domain_name}" do
+          user.revoke_role role.id
+        end
+      end
     end
   end
 end

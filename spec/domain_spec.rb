@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ describe 'openstackclient_test::domain' do
 
   let(:found_domain) do
     double :find,
+           update: { enabled: false },
            destroy: true
   end
 
@@ -66,18 +67,6 @@ describe 'openstackclient_test::domain' do
 
     it do
       expect(chef_run).to delete_openstack_domain('mydomain')
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'Domain with name: "mydomain" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).not_to write_log(
-        'Domain with name: "mydomain" already exists'
-      )
     end
 
     it do
@@ -117,22 +106,14 @@ describe 'openstackclient_test::domain' do
     end
 
     it do
-      expect(chef_run).not_to write_log(
-        'Domain with name: "mydomain" doesn\'t exist'
-      )
-    end
-
-    it do
-      expect(chef_run).to write_log(
-        'Domain with name: "mydomain" already exists'
-      )
-    end
-
-    it do
       expect(domains_populated).not_to receive(:create)
       chef_run
     end
 
+    it do
+      expect(found_domain).to receive(:update).with(enabled: false)
+      chef_run
+    end
     it do
       expect(found_domain).to receive(:destroy)
       chef_run

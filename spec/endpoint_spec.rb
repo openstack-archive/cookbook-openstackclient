@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -37,11 +37,17 @@ describe 'openstackclient_test::endpoint' do
            find: nil
   end
 
+  let(:found_endpoint) do
+    double :find,
+      id: 2,
+      destroy: true
+  end
+
   let(:endpoints_populated) do
     double :endpoints,
            create: true,
            destroy: true,
-           find: double(id: 2)
+           find: found_endpoint
   end
 
   context 'no endpoints defined' do
@@ -67,18 +73,6 @@ describe 'openstackclient_test::endpoint' do
     end
 
     %w(public internal admin).each do |interface|
-      it do
-        expect(chef_run).to write_log(
-          "#{interface}_endpoint for \"myservice\" doesn't exist"
-        )
-      end
-
-      it do
-        expect(chef_run).not_to write_log(
-          "#{interface}_endpoint for \"myservice\" already exists"
-        )
-      end
-
       it do
         expect(chef_run).to create_openstack_endpoint("myendpoint_#{interface}")
       end
@@ -126,18 +120,6 @@ describe 'openstackclient_test::endpoint' do
     end
     %w(public internal admin).each do |interface|
       it do
-        expect(chef_run).not_to write_log(
-          "#{interface}_endpoint for \"myservice\" doesn't exist"
-        )
-      end
-
-      it do
-        expect(chef_run).to write_log(
-          "#{interface}_endpoint for \"myservice\" already exists"
-        )
-      end
-
-      it do
         expect(chef_run).to create_openstack_endpoint("myendpoint_#{interface}")
       end
 
@@ -158,8 +140,7 @@ describe 'openstackclient_test::endpoint' do
       end
 
       it do
-        expect(endpoints_populated).to receive(:destroy)
-          .with(2)
+        expect(found_endpoint).to receive(:destroy)
         chef_run
       end
     end

@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -35,28 +35,28 @@ module OpenstackclientCookbook
         e.service_id == service.id && e.interface == new_resource.interface
       end
 
-      if endpoint
-        log "#{new_resource.interface}_endpoint for \"#{new_resource.service_name}\" already exists"
-      else
-        new_resource.connection.endpoints.create(
-          interface: new_resource.interface,
-          url: new_resource.url,
-          service_id: service.id,
-          name: new_resource.endpoint_name,
-          region: new_resource.region
-        )
+      unless endpoint
+        converge_by "creating endpoint #{new_resource.endpoint_name}" do
+          new_resource.connection.endpoints.create(
+            interface: new_resource.interface,
+            url: new_resource.url,
+            service_id: service.id,
+            name: new_resource.endpoint_name,
+            region: new_resource.region
+          )
+        end
       end
     end
 
     action :delete do
-      service = new_resource.connection.services.find { |s| s.name == service_name }
+      service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
       endpoint = new_resource.connection.endpoints.find do |e|
-        e.service_id == service.id && e.interface == interface
+        e.service_id == service.id && e.interface == new_resource.interface
       end
       if endpoint
-        new_resource.connection.endpoints.destroy(endpoint.id)
-      else
-        log "#{new_resource.interface}_endpoint for \"#{new_resource.service_name}\" doesn't exist"
+        converge_by "deleting endpoint #{new_resource.endpoint_name}" do
+          endpoint.destroy
+        end
       end
     end
   end

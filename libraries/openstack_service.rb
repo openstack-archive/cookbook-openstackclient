@@ -1,6 +1,6 @@
 
 #
-# Copyright:: 2016-2021, cloudbau GmbH
+# Copyright:: 2016-2022, cloudbau GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -28,22 +28,22 @@ module OpenstackclientCookbook
 
     action :create do
       service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
-      if service
-        log "Service with name: \"#{new_resource.service_name}\" already exists"
-      else
-        new_resource.connection.services.create(
-          name: new_resource.service_name,
-          type: new_resource.type
-        )
+      unless service
+        converge_by "creating service #{new_resource.service_name}" do
+          new_resource.connection.services.create(
+            name: new_resource.service_name,
+            type: new_resource.type
+          )
+        end
       end
     end
 
     action :delete do
       service = new_resource.connection.services.find { |s| s.name == new_resource.service_name }
       if service
-        service.destroy
-      else
-        log "Service with name: \"#{new_resource.service_name}\" doesn't exist"
+        converge_by "creating service #{new_resource.service_name}" do
+          service.destroy
+        end
       end
     end
   end
